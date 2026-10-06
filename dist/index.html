@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#4d4dbb"><meta name="description" content="Discover books, question papers and research connected to your subjects with Jain University Library Discovery.">
+  <title>JULDP · Your library, discovered</title>
+  <link rel="icon" href="assets/brand.svg" type="image/svg+xml"><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="left-sidebar">
+      <a class="brand" href="#home" aria-label="JULDP home"><span class="brand-mark"><img src="assets/book-2.svg" alt=""></span><span>JULDP<span class="brand-sub">Jain University Library Discovery</span></span></a>
+      <nav class="primary-nav" aria-label="Main navigation">
+        <a href="#home" data-page="home"><img src="assets/home.svg" alt="">Home</a>
+        <a href="#discover" data-page="discover"><img src="assets/compass.svg" alt="">Discover</a>
+        <a href="#search" data-page="search"><img src="assets/search.svg" alt="">Search</a>
+        <a href="#saved" data-page="saved"><img src="assets/bookmark.svg" alt="">Saved<span id="saved-count" class="count">0</span></a>
+      </nav>
+      <div class="library-nav"><p class="nav-label">YOUR LIBRARY</p><button data-category="My Subjects"><img src="assets/stack-2.svg" alt="">My subjects</button><button data-category="PYQs"><img src="assets/file-text.svg" alt="">Question papers</button><button data-category="Books"><img src="assets/books.svg" alt="">Books</button><button data-category="Research"><img src="assets/microscope.svg" alt="">Research</button><button data-category="E-Resources"><img src="assets/world.svg" alt="">E-resources</button></div>
+      <div class="sidebar-bottom"><div class="library-note"><img src="assets/building.svg" alt=""><strong>A whole library.<br>A little closer.</strong><p>Find something useful for<br>what you're learning today.</p></div><button data-page="profile" class="account"><span class="avatar">AS</span><span><strong>Aarav Sharma</strong><small>B.Tech CSE · Semester 5</small></span><img src="assets/chevrons-right.svg" alt=""></button></div>
+    </aside>
+    <main id="main">
+      <header class="mobile-header"><a class="brand" href="#home"><span class="brand-mark"><img src="assets/book-2.svg" alt=""></span><span>JULDP<span class="brand-sub">Jain University Library Discovery</span></span></a><button class="avatar" data-page="profile" aria-label="Your profile">AS</button></header>
+      <div class="desktop-top"><div><span class="welcome">YOUR LIBRARY, DISCOVERED</span><h1 id="page-title">A little curiosity goes a long way.</h1></div><button class="icon-button" id="updates" aria-label="Library updates"><img src="assets/bell.svg" alt=""><span class="unread"></span></button></div>
+      <form class="global-search" id="search-form" role="search"><img src="assets/search.svg" alt=""><label class="sr-only" for="search-input">Search JULDP</label><input id="search-input" placeholder="Search books, PYQs, subjects, research..." autocomplete="off"><kbd>/</kbd></form>
+      <nav class="categories" id="categories" aria-label="Resource categories"></nav>
+      <div id="content"></div>
+      <footer class="feed-footer">You've found your corner of the library.<br><span>Academic records and availability are sample data for this prototype.</span></footer>
+    </main>
+    <aside class="right-sidebar">
+      <div class="context-profile"><span class="avatar">AS</span><div><strong>Your learning space</strong><p>B.Tech CSE · Semester 5</p></div></div>
+      <section class="subjects"><div class="section-label"><h2>My subjects</h2><button data-page="profile">Edit</button></div><div id="subject-list"></div><button class="subtle-link" data-category="My Subjects">Explore subject resources<img src="assets/chevron-right.svg" alt=""></button></section>
+      <section class="exam-prep"><div class="section-label"><h2><img src="assets/calendar-event.svg" alt="">One step ahead</h2></div><p>Good preparation starts with<br>the right resources.</p><button data-category="PYQs">Explore question papers<img src="assets/chevron-right.svg" alt=""></button><span>Previous years. Fresh perspective.</span></section>
+      <section class="trending"><div class="section-label"><h2>On everyone's reading list</h2><img src="assets/trending-up.svg" alt=""></div><div id="trending-list"></div></section>
+      <section class="library-updates"><div class="section-label"><h2>From the library</h2><img src="assets/speakerphone.svg" alt=""></div><button id="library-update"><span class="update-date">LIBRARY UPDATE</span><strong>More room for your next idea.</strong><p>Explore newly added research and digital resources.</p><small>Browse the latest additions<img src="assets/chevron-right.svg" alt=""></small></button></section>
+      <div class="right-footer">Jain University Library Discovery<br><span>Made for curious minds.</span><p>High-fidelity prototype · Sample records</p></div>
+    </aside>
+  </div>
+  <nav class="bottom-nav" aria-label="Mobile navigation"><a href="#home" data-page="home"><img src="assets/home.svg" alt="">Home</a><a href="#search" data-page="search"><img src="assets/search.svg" alt="">Search</a><a href="#saved" data-page="saved"><img src="assets/bookmark.svg" alt="">Saved</a><a href="#profile" data-page="profile"><img src="assets/user.svg" alt="">Profile</a></nav>
+  <dialog id="resource-dialog" aria-labelledby="detail-title"><button class="dialog-close icon-button" aria-label="Close resource"><img src="assets/x.svg" alt=""></button><div id="detail-content"></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="app.js"></script>
+</body></html>
