@@ -10,3 +10,4 @@
 @media(max-width:640px){.holdings-panel{padding:15px}.holdings-heading h3{font-size:15px}.stock-summary{align-items:flex-start;flex-direction:column;gap:7px}.stock-summary .available{font-size:12px}.stock-summary>strong{font-size:12px}.shelf-grid>div{padding:10px}.shelf-grid dd{font-size:13px}.holdings-note{font-size:11px}.location-strip>span:not(.call-number){line-height:1.8}}
 [hidden]{display:none!important}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.categories .mobile-library-link{display:none}@media(max-width:640px){.categories .mobile-library-link{display:block}}

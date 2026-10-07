@@ -8,7 +8,7 @@ let saved=readLocal('juldp-saved',[]);if(!Array.isArray(saved))saved=[];
 let profile=readLocal('juldp-profile',{branch:'B.Tech CSE',semester:'5',subjects:subjects.slice(0,3).map(s=>s.name)});if(!profile||!Array.isArray(profile.subjects))profile={branch:'B.Tech CSE',semester:'5',subjects:subjects.slice(0,3).map(s=>s.name)};
 let category='For You',query='',page='home',toastTimer;
 const categories=['For You','PYQs','Books','Research','E-Resources','My Subjects'];
-const titles={home:'A little curiosity goes a long way.',discover:'Follow your curiosity.',search:'Find your next resource.',topics:'Find the books behind an idea.',saved:'Good finds, kept close.',profile:'Your learning space.'};
+const titles={home:'A little curiosity goes a long way.',discover:'Follow your curiosity.',search:'Find your next resource.',topics:'Find the books behind an idea.','find-library':'Find your book on the shelf.',saved:'Good finds, kept close.',profile:'Your learning space.'};
 const popularTopics=['Data Structures','Trees','Hashing','Graphs','Sorting','Operating Systems'];
 function topicChips(topics,matched=[]){return `<div class="discovery-topics topic-chips">${topics.map(topic=>`<button data-topic="${escape(topic)}" class="${matched.includes(topic)?'matched':''}">${escape(topic)}</button>`).join('')}</div>`;}
 function persist(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch{notify('Your browser could not save this change. It will last for this visit.');return false;}}
@@ -30,12 +30,12 @@ function empty(title,message,action='Browse the feed'){return `<div class="empty
 function render(){
  $('#page-title').textContent=titles[page]||titles.home;
  $('#search-input').value=query;
- $('#search-form').classList.toggle('search-visible',['search','topics'].includes(page));
- $('#search-input').placeholder=page==='topics'?'Try Data Structures, hashing, binary trees...':'Search books, PYQs, subjects, research...';
+ $('#search-form').classList.toggle('search-visible',['search','topics','find-library'].includes(page));
+ $('#search-input').placeholder=page==='find-library'?'Search physical books by title, author or subject...':page==='topics'?'Try Data Structures, hashing, binary trees...':'Search books, PYQs, subjects, research...';
  $('#search-modes').hidden=!['search','topics'].includes(page);
  $('#search-modes').innerHTML=[['search','All resources'],['topics','Search by topic']].map(([route,label])=>`<a href="#${route}" class="${page===route?'active':''}" ${page===route?'aria-current="page"':''}>${label}</a>`).join('');
- $('#categories').hidden=['profile','topics'].includes(page);
- $('#categories').innerHTML=categories.map(c=>`<button data-category="${c}" class="${c===category?'active':''}" aria-pressed="${c===category}">${c}</button>`).join('');
+ $('#categories').hidden=['profile','topics','find-library'].includes(page);
+ $('#categories').innerHTML=categories.map(c=>`<button data-category="${c}" class="${c===category?'active':''}" aria-pressed="${c===category}">${c}</button>`).join('')+'<button class="mobile-library-link" data-page="find-library">Find in Library</button>';
  document.querySelectorAll('[data-page]').forEach(el=>{el.classList.toggle('active',(el.dataset.page===page||(page==='topics'&&el.dataset.page==='search')));if(el.dataset.page===page||(page==='topics'&&el.dataset.page==='search'))el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
  $('#saved-count').textContent=saved.length;
  $('.account small').textContent=`${profile.branch} · Semester ${profile.semester}`;
@@ -49,6 +49,10 @@ function render(){
   content=`<section class="topic-intro"><h2 class="view-heading">${query.trim()?`Books covering “${escape(query.trim())}”`:'What would you like to understand?'}</h2><p class="view-description">Find books by the concepts they cover, even when the topic isn’t in the title.</p>${topicChips(popularTopics)}<p class="topic-count" role="status">${query.trim()?`${matches.length} ${matches.length===1?'book':'books'} found · Closest matches first`:'Choose a topic or type a concept above.'}</p></section>`;
   if(query.trim())content+=matches.length?matches.map(post).join(''):`<div class="empty">${icon('search')}<h2>No books cover this topic yet.</h2><p>Try a broader concept, such as trees or Data Structures.</p><button class="primary-action" data-topic="Data Structures">Explore Data Structures</button></div>`;
   else content+=`<div class="topic-start">${icon('books')}<h3>Look beyond the book title.</h3><p>Data Structures connects to books on algorithms, operating systems, and database indexing.</p><button class="text-action" data-topic="Data Structures">Explore Data Structures ${icon('chevron-right')}</button></div>`;
+ }else if(page==='find-library'){
+  const books=filterResources({category:'Books',query});
+  content=`<h2 class="view-heading">Find in Library</h2><p class="view-description">Find a physical book, check its availability, and see its exact shelf location.</p><p class="topic-count" role="status">${books.length} ${books.length===1?'book':'books'} · Demo library records</p>`;
+  content+=books.length?books.map(post).join(''):`<div class="empty">${icon('search')}<h2>No books found.</h2><p>Try a title, author or subject from the demo collection.</p></div>`;
  }else if(page==='search'){
   const matches=filterResources({category,query,selectedSubjects:profile.subjects});
   content=`<h2 class="view-heading">${query?`Results for “${escape(query)}”`:'A subject, a title, a spark.'}</h2><p class="view-description">${query?`${matches.length} resources found in the demo collection`:'Search across your university’s resource collection.'}</p>`;
@@ -65,7 +69,7 @@ function render(){
  $('#content').innerHTML=content;
  const branch=$('#profile-form select[name="branch"]');if(branch)branch.value=profile.branch;
 }
-function go(next){page=['home','discover','search','topics','saved','profile'].includes(next)?next:'home';if(!['search','topics'].includes(page))query='';render();window.scrollTo(0,0);if(['search','topics'].includes(page))$('#search-input').focus();}
+function go(next){page=['home','discover','search','topics','find-library','saved','profile'].includes(next)?next:'home';if(!['search','topics','find-library'].includes(page))query='';render();window.scrollTo(0,0);if(['search','topics','find-library'].includes(page))$('#search-input').focus();}
 function setCategory(next){category=next;if(!['home','discover','search','saved'].includes(page)){page='home';query='';}render();}
 function openDetail(id,location=false){const r=resources.find(r=>r.id===id);if(!r)return;
  const book=r.type==='BOOK';
@@ -88,8 +92,8 @@ document.addEventListener('click',e=>{
  if(button.dataset.save){const id=button.dataset.save;const wasSaved=saved.includes(id);saved=wasSaved?saved.filter(x=>x!==id):[...saved,id];const stored=persist('juldp-saved',saved);render();if($('#resource-dialog').open){document.querySelectorAll(`#resource-dialog [data-save="${id}"]`).forEach(el=>{el.outerHTML=saveButton(resources.find(r=>r.id===id));});}if(stored)notify(wasSaved?'Removed from your saved resources.':'Saved for your next study session.');}
 });
 document.addEventListener('error',e=>{const image=e.target;if(!(image instanceof HTMLImageElement)||!image.classList.contains('book-cover'))return;if(image.dataset.fallback&&image.src!==new URL(image.dataset.fallback,location.href).href)image.src=image.dataset.fallback;else image.hidden=true;},true);
-$('#search-form').addEventListener('submit',e=>{e.preventDefault();query=$('#search-input').value;page=page==='topics'?'topics':'search';location.hash=page;render();$('#search-input').focus();});
-$('#search-input').addEventListener('input',e=>{query=e.target.value;if(!['search','topics'].includes(page)){page='search';location.hash='search';}const cursor=e.target.selectionStart;render();$('#search-input').focus();$('#search-input').setSelectionRange(cursor,cursor);});
+$('#search-form').addEventListener('submit',e=>{e.preventDefault();query=$('#search-input').value;if(!['topics','find-library'].includes(page))page='search';location.hash=page;render();$('#search-input').focus();});
+$('#search-input').addEventListener('input',e=>{query=e.target.value;if(!['search','topics','find-library'].includes(page)){page='search';location.hash='search';}const cursor=e.target.selectionStart;render();$('#search-input').focus();$('#search-input').setSelectionRange(cursor,cursor);});
 document.addEventListener('submit',e=>{if(e.target.id!=='profile-form')return;e.preventDefault();const form=new FormData(e.target);profile={branch:form.get('branch'),semester:form.get('semester'),subjects:form.getAll('subject')};const stored=persist('juldp-profile',profile);render();if(stored)notify('Your learning preferences have been updated.');});
 $('.dialog-close').addEventListener('click',()=>$('#resource-dialog').close());
 $('#resource-dialog').addEventListener('click',e=>{if(e.target===$('#resource-dialog')){const rect=e.target.getBoundingClientRect();if(e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom)e.target.close();}});
