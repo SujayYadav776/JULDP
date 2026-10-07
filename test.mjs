@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {resources,subjects,filterResources} from './dist/data.js';
+import {resources,subjects,filterResources,searchBooksByTopic} from './dist/data.js';
 import {coverUrlForIsbn} from './dist/book-covers.js';
 test('categories, search, subjects, saved items and related resources agree',()=>{
  for(const [category,type]of [['PYQs','PYQ'],['Books','BOOK'],['Research','RESEARCH'],['E-Resources','E-RESOURCE']]){const found=filterResources({category});assert.ok(found.length);assert.ok(found.every(r=>r.type===type));}
@@ -14,4 +14,19 @@ test('categories, search, subjects, saved items and related resources agree',()=
  for(const r of resources)for(const id of r.related)assert.ok(resources.some(x=>x.id===id));
  for(const book of resources.filter(r=>r.type==='BOOK')){assert.match(book.isbn,/^(?:\d{9}[\dX]|\d{13})$/);assert.equal(new URL(coverUrlForIsbn(book.isbn)).hostname,'covers.openlibrary.org');}
  assert.throws(()=>coverUrlForIsbn('../invalid'),TypeError);
+ const ds=searchBooksByTopic('Data Structures');
+ assert.equal(ds.length,5);
+ assert.equal(ds[0].id,'ds-book');
+ assert.ok(ds.every(book=>book.type==='BOOK'&&book.matchedTopics.includes('Data Structures')));
+ assert.ok(ds.slice(0,3).every(book=>book.subject==='Data Structures'));
+ assert.ok(ds.some(book=>book.id==='db-book')&&ds.some(book=>book.id==='os-book'));
+ assert.deepEqual(searchBooksByTopic(' DS ').map(book=>book.id),ds.map(book=>book.id));
+ assert.deepEqual(searchBooksByTopic('dsa').map(book=>book.id),ds.map(book=>book.id));
+ assert.ok(searchBooksByTopic('hash tables').some(book=>book.id==='db-book'));
+ assert.ok(searchBooksByTopic('binary trees').every(book=>book.topics.includes('Binary Search Trees')));
+ assert.ok(searchBooksByTopic('trees and hashing').every(book=>book.topics.some(topic=>topic.includes('Trees'))&&book.topics.includes('Hashing')));
+ assert.equal(searchBooksByTopic('quantum potatoes').length,0);
+ assert.equal(searchBooksByTopic(' ').length,0);
+ assert.equal(searchBooksByTopic('<script>alert(1)</script>').length,0);
+ assert.ok(filterResources({category:'Books',query:'hashing'}).some(book=>book.id==='db-book'));
 });

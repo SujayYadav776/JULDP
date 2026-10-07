@@ -16,13 +16,14 @@
         <a href="#search" data-page="search"><img src="assets/search.svg" alt="">Search</a>
         <a href="#saved" data-page="saved"><img src="assets/bookmark.svg" alt="">Saved<span id="saved-count" class="count">0</span></a>
       </nav>
-      <div class="library-nav"><p class="nav-label">YOUR LIBRARY</p><button data-category="My Subjects"><img src="assets/stack-2.svg" alt="">My subjects</button><button data-category="PYQs"><img src="assets/file-text.svg" alt="">Question papers</button><button data-category="Books"><img src="assets/books.svg" alt="">Books</button><button data-category="Research"><img src="assets/microscope.svg" alt="">Research</button><button data-category="E-Resources"><img src="assets/world.svg" alt="">E-resources</button></div>
+      <div class="library-nav"><p class="nav-label">YOUR LIBRARY</p><button data-category="My Subjects"><img src="assets/stack-2.svg" alt="">My subjects</button><button data-category="PYQs"><img src="assets/file-text.svg" alt="">Question papers</button><button data-category="Books"><img src="assets/books.svg" alt="">Books</button><button data-page="topics"><img src="assets/search.svg" alt="">Search by topic</button><button data-category="Research"><img src="assets/microscope.svg" alt="">Research</button><button data-category="E-Resources"><img src="assets/world.svg" alt="">E-resources</button></div>
       <div class="sidebar-bottom"><div class="library-note"><img src="assets/building.svg" alt=""><strong>A whole library.<br>A little closer.</strong><p>Find something useful for<br>what you're learning today.</p></div><button data-page="profile" class="account"><span class="avatar">AS</span><span><strong>Aarav Sharma</strong><small>B.Tech CSE · Semester 5</small></span><img src="assets/chevrons-right.svg" alt=""></button></div>
     </aside>
     <main id="main">
       <header class="mobile-header"><a class="brand" href="#home"><span class="brand-mark"><img src="assets/book-2.svg" alt=""></span><span>JULDP<span class="brand-sub">Jain University Library Discovery</span></span></a><button class="avatar" data-page="profile" aria-label="Your profile">AS</button></header>
       <div class="desktop-top"><div><span class="welcome">YOUR LIBRARY, DISCOVERED</span><h1 id="page-title">A little curiosity goes a long way.</h1></div><button class="icon-button" id="updates" aria-label="Library updates"><img src="assets/bell.svg" alt=""><span class="unread"></span></button></div>
       <form class="global-search" id="search-form" role="search"><img src="assets/search.svg" alt=""><label class="sr-only" for="search-input">Search JULDP</label><input id="search-input" placeholder="Search books, PYQs, subjects, research..." autocomplete="off"><kbd>/</kbd></form>
+      <nav class="search-modes" id="search-modes" aria-label="Search mode" hidden></nav>
       <nav class="categories" id="categories" aria-label="Resource categories"></nav>
       <div id="content"></div>
       <footer class="feed-footer">You've found your corner of the library.<br><span>Academic records and availability are sample data for this prototype.</span></footer>
